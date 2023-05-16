@@ -6,11 +6,19 @@ const App = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    const found = persons.find((person) => newName === person.name);
+    if (found) {
+      alert(`${newName} is already in the phone book`);
+      setNewName('');
+      return;
+    }
+
     const personObject = {
       name: newName,
       id: persons.length + 1,
     };
     setPersons(persons.concat(personObject));
+    setNewName('');
   };
 
   return (
@@ -27,7 +35,7 @@ const App = () => {
       </form>
       <h2>Numbers</h2>
       {persons.map((person) => (
-        <p>{person.name}</p>
+        <p key={person.name}>{person.name}</p>
       ))}
     </div>
   );
