@@ -9,9 +9,9 @@ const App = () => {
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
   const [searchedName, setSearchedName] = useState('');
-
+  const url = 'http://localhost:3001/persons';
   useEffect(() => {
-    axios.get('http://localhost:3001/persons').then((response) => {
+    axios.get(url).then((response) => {
       const data = response.data;
       setPersons(data);
     });
@@ -37,11 +37,13 @@ const App = () => {
     const personObject = {
       name: newName,
       number: newNumber,
-      id: persons.length + 1,
     };
-    setPersons(persons.concat(personObject));
-    setNewName('');
-    setNewNumber('');
+
+    axios.post(url, personObject).then((response) => {
+      setPersons(persons.concat(response.data));
+      setNewName('');
+      setNewNumber('');
+    });
   };
 
   return (
