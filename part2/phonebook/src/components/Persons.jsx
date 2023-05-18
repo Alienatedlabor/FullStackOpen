@@ -1,5 +1,4 @@
 import React from 'react';
-import phonebookService from '../services/phonebook';
 
 const Person = ({ name, number, deleteEntry }) => {
   return (

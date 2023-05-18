@@ -34,19 +34,38 @@ const App = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const foundPerson = persons.find((person) => newName === person.name);
-
-    if (foundPerson) {
-      alert(`${newName} is already in the phone book`);
-      setNewName('');
-      setNewNumber('');
-      return;
-    }
-
     const personObject = {
       name: newName,
       number: newNumber,
     };
+    const foundPerson = persons.find(
+      (person) => newName.toLowerCase() === person.name.toLowerCase()
+    );
+    const updatedObject = { ...personObject, number: newNumber };
+
+    if (foundPerson) {
+      if (
+        window.confirm(
+          `${newName} is already in the phone book, would you like to replace the old number with the new one?`
+        )
+      ) {
+        phonebookService
+          .update(foundPerson.id, updatedObject)
+          .then((returnedPerson) =>
+            setPersons(
+              persons.map((person) =>
+                person.id !== foundPerson.id ? person : returnedPerson
+              )
+            )
+          )
+          .catch((error) => alert('failed to update'));
+        setNewName('');
+        setNewNumber('');
+      }
+      setNewName('');
+      setNewNumber('');
+      return;
+    }
 
     phonebookService.create(personObject).then((responseData) => {
       setPersons(persons.concat(responseData));
