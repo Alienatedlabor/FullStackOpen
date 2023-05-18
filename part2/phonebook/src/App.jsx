@@ -2,19 +2,15 @@ import { useState, useEffect } from 'react';
 import Persons from './components/Persons';
 import Filter from './components/Filter';
 import PersonForm from './components/PersonForm';
-import axios from 'axios';
-
+import phonebookService from './services/phonebook';
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
   const [searchedName, setSearchedName] = useState('');
-  const url = 'http://localhost:3001/persons';
+
   useEffect(() => {
-    axios.get(url).then((response) => {
-      const data = response.data;
-      setPersons(data);
-    });
+    phonebookService.getAll().then((responseData) => setPersons(responseData));
   }, []);
 
   const filteredEntries = !searchedName
@@ -39,8 +35,8 @@ const App = () => {
       number: newNumber,
     };
 
-    axios.post(url, personObject).then((response) => {
-      setPersons(persons.concat(response.data));
+    phonebookService.create(personObject).then((responseData) => {
+      setPersons(persons.concat(responseData));
       setNewName('');
       setNewNumber('');
     });
