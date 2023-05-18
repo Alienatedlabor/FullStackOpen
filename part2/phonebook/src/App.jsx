@@ -9,6 +9,19 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('');
   const [searchedName, setSearchedName] = useState('');
 
+  const deleteEntry = (person) => {
+    if (window.confirm(`delete ${person.name}?`)) {
+      phonebookService
+        .deleteEntry(person.id)
+        .then(() =>
+          setPersons(
+            persons.filter((loopPerson) => loopPerson.id !== person.id)
+          )
+        )
+        .catch((error) => alert(`${person.name} failed to be deleted`));
+    }
+  };
+
   useEffect(() => {
     phonebookService.getAll().then((responseData) => setPersons(responseData));
   }, []);
@@ -58,7 +71,7 @@ const App = () => {
         value={searchedName}
         onChange={(e) => setSearchedName(e.target.value)}
       />
-      <Persons filteredEntries={filteredEntries} />
+      <Persons filteredEntries={filteredEntries} deleteEntry={deleteEntry} />
     </div>
   );
 };
