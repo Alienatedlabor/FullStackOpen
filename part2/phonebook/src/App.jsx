@@ -35,12 +35,21 @@ const App = () => {
     if (window.confirm(`delete ${person.name}?`)) {
       phonebookService
         .deleteEntry(person.id)
-        .then(() =>
+        .then(() => {
           setPersons(
             persons.filter((loopPerson) => loopPerson.id !== person.id)
-          )
-        )
-        .catch((error) => alert(`${person.name} failed to be deleted`));
+          );
+          setNotificationStyle(successStyle);
+          setNotificationMessage(`${person.name} deleted`);
+          setTimeout(() => setNotificationMessage(null), 5000);
+          setTimeout(() => setNotificationStyle(null), 5000);
+        })
+        .catch((error) => {
+          setNotificationStyle(errorStyle);
+          setNotificationMessage(`${person.name} failed to be deleted.`);
+          setTimeout(() => setNotificationMessage(null), 5000);
+          setTimeout(() => setNotificationStyle(null), 5000);
+        });
     }
   };
 
@@ -80,13 +89,21 @@ const App = () => {
               )
             )
           )
-          .then(() => {
+          .then((returnedPerson) => {
             setNotificationStyle(successStyle);
             setNotificationMessage(`${newName} updated`);
             setTimeout(() => setNotificationMessage(null), 5000);
             setTimeout(() => setNotificationStyle(null), 5000);
           })
-          .catch((error) => alert('failed to update'));
+          .catch((error) => {
+            setNotificationStyle(errorStyle);
+            setNotificationMessage(
+              `${newName} failed to update. Entry may have already been deleted from the server`
+            );
+            //need some kind of filter here but not sure what parameters it needs  setPersons(persons.filter())
+            setTimeout(() => setNotificationMessage(null), 5000);
+            setTimeout(() => setNotificationStyle(null), 5000);
+          });
         setNewName('');
         setNewNumber('');
       }
@@ -96,7 +113,6 @@ const App = () => {
     }
 
     phonebookService.create(personObject).then((responseData) => {
-      console.log(responseData);
       setPersons(persons.concat(responseData));
       setNotificationMessage(`${responseData.name} created`);
       setNotificationStyle(successStyle);
