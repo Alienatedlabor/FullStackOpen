@@ -3,11 +3,33 @@ import Persons from './components/Persons';
 import Filter from './components/Filter';
 import PersonForm from './components/PersonForm';
 import phonebookService from './services/phonebook';
+import Notification from './components/Notification';
+
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
   const [searchedName, setSearchedName] = useState('');
+  const [notificationMessage, setNotificationMessage] = useState('');
+  const [notificationStyle, setNotificationStyle] = useState(null);
+  const successStyle = {
+    color: 'green',
+    background: 'lightgrey',
+    fontSize: 20,
+    borderStyle: 'solid',
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 10,
+  };
+  const errorStyle = {
+    color: 'red',
+    background: 'lightgrey',
+    fontSize: 20,
+    borderStyle: 'solid',
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 10,
+  };
 
   const deleteEntry = (person) => {
     if (window.confirm(`delete ${person.name}?`)) {
@@ -58,6 +80,12 @@ const App = () => {
               )
             )
           )
+          .then(() => {
+            setNotificationStyle(successStyle);
+            setNotificationMessage(`${newName} updated`);
+            setTimeout(() => setNotificationMessage(null), 5000);
+            setTimeout(() => setNotificationStyle(null), 5000);
+          })
           .catch((error) => alert('failed to update'));
         setNewName('');
         setNewNumber('');
@@ -68,7 +96,12 @@ const App = () => {
     }
 
     phonebookService.create(personObject).then((responseData) => {
+      console.log(responseData);
       setPersons(persons.concat(responseData));
+      setNotificationMessage(`${responseData.name} created`);
+      setNotificationStyle(successStyle);
+      setTimeout(() => setNotificationMessage(null), 5000);
+      setTimeout(() => setNotificationStyle(null), 5000);
       setNewName('');
       setNewNumber('');
     });
@@ -76,6 +109,7 @@ const App = () => {
 
   return (
     <div>
+      <Notification message={notificationMessage} style={notificationStyle} />
       <h2>Phonebook</h2>
       <PersonForm
         onSubmit={handleSubmit}
