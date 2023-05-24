@@ -100,7 +100,7 @@ const App = () => {
             setNotificationMessage(
               `${newName} failed to update. Entry may have already been deleted from the server`
             );
-            //need some kind of filter here but not sure what parameters it needs  setPersons(persons.filter())
+            //TODO: need some kind of filter here but not sure what parameters it needs  setPersons(persons.filter())
             setTimeout(() => setNotificationMessage(null), 5000);
             setTimeout(() => setNotificationStyle(null), 5000);
           });
