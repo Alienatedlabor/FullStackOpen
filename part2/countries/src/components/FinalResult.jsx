@@ -1,6 +1,8 @@
 import React from 'react';
 
 const FinalResult = ({ country }) => {
+  // const weatherURL = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${REACT_APP_API_KEY}`;
+
   return (
     <div>
       <h1>{country.name.common}</h1>
@@ -15,6 +17,10 @@ const FinalResult = ({ country }) => {
         ))}
       </div>
       <img src={country.flags.png} alt={country.flags.alt} />
+      <div>
+        <h3>Weather in {country.name.common}</h3>
+        <p></p>
+      </div>
     </div>
   );
 };

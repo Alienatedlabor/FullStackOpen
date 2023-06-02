@@ -5,6 +5,7 @@ import FinalResult from './components/FinalResult';
 function App() {
   const [searchedCountry, setSearchedCountry] = useState('');
   const [allCountries, setAllCountries] = useState([]);
+  const [showCountry, setShowCountry] = useState(false);
   const background = {
     background: '#f8f8ff',
   };
@@ -13,6 +14,9 @@ function App() {
   const filteredCountries = allCountries.filter((country) =>
     country.name.common.toLowerCase().includes(searchedCountry.toLowerCase())
   );
+  const toggleCountry = () => {
+    setShowCountry(!showCountry);
+  };
 
   const handleChange = (e) => {
     setSearchedCountry(e.target.value);
@@ -39,7 +43,11 @@ function App() {
           ) : (
             filteredCountries.map((country) => (
               <ul key={country.name.common}>
-                <li>{country.name.common}</li>
+                <li>
+                  {country.name.common}
+                  {showCountry && <FinalResult country={country} />}
+                  <button onClick={toggleCountry}>Show</button>
+                </li>
               </ul>
             ))
           ))}
